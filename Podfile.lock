@@ -1,0 +1,18 @@
+PODS:
+  - Cartography (1.0.1)
+  - Reveal-SDK (2)
+  - SwiftDate (4.0.4)
+
+DEPENDENCIES:
+  - Cartography
+  - Reveal-SDK
+  - SwiftDate
+
+SPEC CHECKSUMS:
+  Cartography: c1460e99395b824d9d75360b0382faeb0b33dcd7
+  Reveal-SDK: 4d36a47c7091843eee525b72219e005b90bbac0b
+  SwiftDate: 16d9e299eafb8021d921e874f13c0f79e7f1a801
+
+PODFILE CHECKSUM: 4a25dca9ad6eaa4b06e880b67a1c84d471db2a3f
+
+COCOAPODS: 1.1.1
