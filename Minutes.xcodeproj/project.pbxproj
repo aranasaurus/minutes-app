@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		549D1E1E7EFD772C6C508461 /* Pods_Minutes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC9EF1540900DFF816178A5 /* Pods_Minutes.framework */; };
 		72BADCB87EC4E142F4488E06 /* Pods_minutesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF78531D73A52D6FE41ECC2 /* Pods_minutesTests.framework */; };
+		946485BA1DC5070900A5CE0A /* ProjectsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946485B91DC5070900A5CE0A /* ProjectsViewController.swift */; };
 		9479FC4B1DC46D4200081E25 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9479FC4A1DC46D4200081E25 /* AppDelegate.swift */; };
 		9479FC521DC46D4200081E25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9479FC511DC46D4200081E25 /* Assets.xcassets */; };
 		9479FC551DC46D4200081E25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9479FC531DC46D4200081E25 /* LaunchScreen.storyboard */; };
@@ -31,6 +32,7 @@
 		630C756114AC1A9EB233BE75 /* Pods-Minutes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Minutes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Minutes/Pods-Minutes.debug.xcconfig"; sourceTree = "<group>"; };
 		6BC9EF1540900DFF816178A5 /* Pods_Minutes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Minutes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72063D8FAF8C0C5CB055F248 /* Pods-Minutes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Minutes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Minutes/Pods-Minutes.release.xcconfig"; sourceTree = "<group>"; };
+		946485B91DC5070900A5CE0A /* ProjectsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
 		9479FC471DC46D4200081E25 /* Minutes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Minutes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9479FC4A1DC46D4200081E25 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9479FC511DC46D4200081E25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -82,6 +84,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		946485B81DC4FCCA00A5CE0A /* code */ = {
+			isa = PBXGroup;
+			children = (
+				9479FC4A1DC46D4200081E25 /* AppDelegate.swift */,
+				946485B91DC5070900A5CE0A /* ProjectsViewController.swift */,
+			);
+			path = code;
+			sourceTree = "<group>";
+		};
 		9479FC3E1DC46D4200081E25 = {
 			isa = PBXGroup;
 			children = (
@@ -105,7 +116,7 @@
 		9479FC491DC46D4200081E25 /* minutes */ = {
 			isa = PBXGroup;
 			children = (
-				9479FC4A1DC46D4200081E25 /* AppDelegate.swift */,
+				946485B81DC4FCCA00A5CE0A /* code */,
 				9479FC511DC46D4200081E25 /* Assets.xcassets */,
 				9479FC531DC46D4200081E25 /* LaunchScreen.storyboard */,
 				9479FC561DC46D4200081E25 /* Info.plist */,
@@ -324,6 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				946485BA1DC5070900A5CE0A /* ProjectsViewController.swift in Sources */,
 				9479FC4B1DC46D4200081E25 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
