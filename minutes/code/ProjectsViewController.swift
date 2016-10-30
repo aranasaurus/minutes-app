@@ -33,7 +33,8 @@ final class ProjectsViewController: UIViewController {
         view.backgroundColor = .lightGray
 
         tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: labelHeight + 4, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: labelHeight + 4, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -tableView.contentInset.top)
         view.addSubview(tableView)
 
         globalTimeLabel.text = "00:00:00"
