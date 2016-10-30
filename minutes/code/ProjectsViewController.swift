@@ -15,12 +15,23 @@ final class ProjectsViewController: UIViewController {
     var labelHeight: CGFloat = 52
     var startStopButton: UIButton
 
+    var tracker: Tracker!
+    let formatter: DateComponentsFormatter = {
+        let f = DateComponentsFormatter()
+        f.allowedUnits = [.hour, .minute, .second]
+        f.zeroFormattingBehavior = .pad
+        return f
+    }()
+
     init() {
         self.tableView = UITableView(frame: .zero, style: .plain)
         self.globalTimeLabel = UILabel(frame: .zero)
         self.startStopButton = UIButton(type: .system)
 
         super.init(nibName: nil, bundle: nil)
+        self.tracker = Tracker() { newValue, oldValue in
+            self.globalTimeLabel.text = self.formatter.string(from: newValue)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,7 +48,7 @@ final class ProjectsViewController: UIViewController {
         tableView.contentOffset = CGPoint(x: 0, y: -tableView.contentInset.top)
         view.addSubview(tableView)
 
-        globalTimeLabel.text = "00:00:00"
+        globalTimeLabel.text = "0:00:00"
         globalTimeLabel.font = UIFont.systemFont(ofSize: labelHeight/1.8, weight: UIFontWeightLight)
         globalTimeLabel.textColor = .white
         globalTimeLabel.backgroundColor = .green
@@ -50,6 +61,7 @@ final class ProjectsViewController: UIViewController {
         startStopButton.setTitle("Start", for: .normal)
         startStopButton.backgroundColor = #colorLiteral(red: 1, green: 0.1857388616, blue: 0.5733950138, alpha: 1)
         startStopButton.tintColor = .white
+        startStopButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         view.addSubview(startStopButton)
 
         constrain(view, tableView, globalTimeLabel, startStopButton) { container, table, label, button in
@@ -68,6 +80,17 @@ final class ProjectsViewController: UIViewController {
             button.trailing == container.trailing
         }
     }
+
+    @objc private func buttonTapped() {
+        if startStopButton.titleLabel?.text == "Start" {
+            startStopButton.setTitle("Stop", for: .normal)
+            tracker.start()
+        } else {
+            startStopButton.setTitle("Start", for: .normal)
+            tracker.stop()
+        }
+    }
+
 }
 
 extension ProjectsViewController: UITableViewDataSource {
