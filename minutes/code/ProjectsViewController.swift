@@ -29,8 +29,9 @@ final class ProjectsViewController: UIViewController {
         self.startStopButton = UIButton(type: .system)
 
         super.init(nibName: nil, bundle: nil)
+
         self.tracker = Tracker() { newValue, oldValue in
-            self.globalTimeLabel.text = self.formatter.string(from: newValue)
+            self.globalTimeLabel.text = self.formatter.string(from: round(newValue))
         }
     }
     
