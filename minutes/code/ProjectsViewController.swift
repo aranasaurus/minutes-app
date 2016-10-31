@@ -10,12 +10,9 @@ import UIKit
 import Cartography
 
 final class ProjectsViewController: UIViewController {
-    var tableView: UITableView
-    var globalTimeLabel: UILabel
-    var labelHeight: CGFloat = 52
-    var startStopButton: UIButton
+    var statusBarBackground: UIView
+    var collectionView: UICollectionView
 
-    var tracker: Tracker!
     let formatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
         f.allowedUnits = [.hour, .minute, .second]
@@ -24,82 +21,64 @@ final class ProjectsViewController: UIViewController {
     }()
 
     init() {
-        self.tableView = UITableView(frame: .zero, style: .plain)
-        self.globalTimeLabel = UILabel(frame: .zero)
-        self.startStopButton = UIButton(type: .system)
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        self.statusBarBackground = UIView(frame: .zero)
 
         super.init(nibName: nil, bundle: nil)
-
-        self.tracker = Tracker() { newValue, oldValue in
-            self.globalTimeLabel.text = self.formatter.string(from: round(newValue))
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .lightGray
+        view.backgroundColor = Colors.darkBackground
+        statusBarBackground.backgroundColor = Colors.primary
+        view.addSubview(statusBarBackground)
 
-        tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height, left: 0, bottom: labelHeight + 4, right: 0)
-        tableView.contentOffset = CGPoint(x: 0, y: -tableView.contentInset.top)
-        view.addSubview(tableView)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height + 8, left: 0, bottom: 0, right: 0)
+        collectionView.contentOffset = CGPoint(x: 0, y: -collectionView.contentInset.top)
+        collectionView.backgroundColor = .clear
+        collectionView.register(ProjectCell.self, forCellWithReuseIdentifier: ProjectCell.reuseIdentifier)
+        view.addSubview(collectionView)
 
-        globalTimeLabel.text = "0:00:00"
-        globalTimeLabel.font = UIFont.systemFont(ofSize: labelHeight/1.8, weight: UIFontWeightLight)
-        globalTimeLabel.textColor = .white
-        globalTimeLabel.backgroundColor = .green
-        globalTimeLabel.alpha = 0.8
-        globalTimeLabel.textAlignment = .center
-        view.addSubview(globalTimeLabel)
+        constrain(view, statusBarBackground, collectionView) { container, bar, table in
+            bar.top == container.top
+            bar.height == UIApplication.shared.statusBarFrame.height
+            bar.left == container.left
+            bar.right == container.right
 
-        startStopButton.titleLabel?.font = UIFont.systemFont(ofSize: 96, weight: UIFontWeightSemibold)
-        startStopButton.contentVerticalAlignment = .center
-        startStopButton.setTitle("Start", for: .normal)
-        startStopButton.backgroundColor = #colorLiteral(red: 1, green: 0.1857388616, blue: 0.5733950138, alpha: 1)
-        startStopButton.tintColor = .white
-        startStopButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        view.addSubview(startStopButton)
-
-        constrain(view, tableView, globalTimeLabel, startStopButton) { container, table, label, button in
             table.top == container.topMargin
             table.leading == container.leading
             table.trailing == container.trailing
-            table.bottom == button.top
-
-            label.bottom == button.top
-            label.leading == container.leading
-            label.trailing == container.trailing
-            label.height == labelHeight
-
-            button.bottom == container.bottom
-            button.leading == container.leading
-            button.trailing == container.trailing
+            table.bottom == container.bottom
         }
-    }
 
-    @objc private func buttonTapped() {
-        if startStopButton.titleLabel?.text == "Start" {
-            startStopButton.setTitle("Stop", for: .normal)
-            tracker.start()
-        } else {
-            startStopButton.setTitle("Start", for: .normal)
-            tracker.stop()
-        }
+        view.bringSubview(toFront: statusBarBackground)
     }
 
 }
 
-extension ProjectsViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+extension ProjectsViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 32
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
+        cell.configure(for: "\(indexPath.item)")
+        return cell
+    }
+}
+
+extension ProjectsViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 16, height: 120)
     }
 }
