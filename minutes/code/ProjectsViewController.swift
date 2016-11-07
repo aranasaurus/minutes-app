@@ -20,6 +20,10 @@ final class ProjectsViewController: UIViewController {
         return f
     }()
 
+    let data = stride(from: 0, to: 10, by: 1).map {
+        return Project(id: "\($0)", name: "Project \($0)", tracker: Tracker(identifier: "\($0)", updateBlock: nil), price: 0)
+    }
+
     init() {
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         self.statusBarBackground = UIView(frame: .zero)
@@ -67,18 +71,18 @@ final class ProjectsViewController: UIViewController {
 
 extension ProjectsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 32
+        return data.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
-        cell.configure(for: "\(indexPath.item)")
+        cell.configure(for: data[indexPath.item], formatter: formatter)
         return cell
     }
 }
 
 extension ProjectsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 16, height: 120)
+        return CGSize(width: collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 16, height: 128)
     }
 }
