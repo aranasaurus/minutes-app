@@ -9,14 +9,47 @@
 import UIKit
 import Cartography
 
+
 class ProjectCell: UICollectionViewCell {
     static let reuseIdentifier = "ProjectCell"
+
+    struct Model {
+        let identifier: String
+        let name: String
+        let time: String?
+        let isTracking: Bool
+        let buttonTapped: (Model) -> Model
+
+        init(project: Project, formatter: DateComponentsFormatter, buttonTapped: @escaping (Model) -> Model) {
+            self.identifier = project.identifier
+            self.name = project.name
+            self.time = formatter.string(from: project.time + abs(project.trackingSession?.startTime.timeIntervalSinceNow ?? 0))
+            self.isTracking = project.trackingSession != nil
+            self.buttonTapped = buttonTapped
+        }
+    }
 
     let imgView: UIImageView
     let nameLabel: UILabel
     let timeLabel: UILabel
     let priceLabel: UILabel
     let startButton: UIButton
+
+    var model: Model? {
+        didSet {
+            nameLabel.text = model?.name
+            timeLabel.text = model?.time
+            if model?.isTracking ?? false {
+                startButton.setTitle("Stop", for: .normal)
+                startButton.backgroundColor = Colors.contrast
+                timeLabel.textColor = Colors.contrast
+            } else {
+                startButton.setTitle("Start", for: .normal)
+                startButton.backgroundColor = Colors.primary
+                timeLabel.textColor = Colors.primary
+            }
+        }
+    }
 
     override init(frame: CGRect) {
         imgView = UIImageView(frame: .zero)
@@ -67,44 +100,10 @@ class ProjectCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(`for` project: Project, formatter: DateComponentsFormatter) {
-        self.project = project
-        nameLabel.text = project.name
-        priceLabel.text = String(format: "$%2f", project.price)
-        timeLabel.text = formatter.string(from: project.tracker.duration)
-        styleButton()
-
-        project.tracker.durationUpdateBlock = { new, old in
-            self.timeLabel.text = formatter.string(from: new)
-        }
-    }
-    var project: Project!
-
     @objc private func buttonTapped() {
-        if project.tracker.isTracking {
-            project.tracker.stop()
-        } else {
-            project.tracker.start()
-        }
-        styleButton()
-    }
-
-    private func styleButton() {
-        if project.tracker.isTracking {
-            startButton.setTitle("Stop", for: .normal)
-            startButton.backgroundColor = Colors.contrast
-            timeLabel.textColor = Colors.contrast
-        } else {
-            startButton.setTitle("Start", for: .normal)
-            startButton.backgroundColor = Colors.primary
-            timeLabel.textColor = Colors.primary
-        }
+        guard let model = model else { return }
+        self.model = model.buttonTapped(model)
     }
 }
 
-struct Project {
-    let id: String
-    var name: String
-    var tracker: Tracker
-    var price: Double
-}
+

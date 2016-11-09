@@ -20,9 +20,11 @@ final class ProjectsViewController: UIViewController {
         return f
     }()
 
-    let data = stride(from: 0, to: 10, by: 1).map {
-        return Project(id: "\($0)", name: "Project \($0)", tracker: Tracker(identifier: "\($0)", updateBlock: nil), price: 0)
+    var data = stride(from: 0, to: 10, by: 1).map {
+        return Project(identifier: "\($0)", name: "Project #\($0 + 1)")
     }
+
+    var timer: Timer?
 
     init() {
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -76,7 +78,20 @@ extension ProjectsViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
-        cell.configure(for: data[indexPath.item], formatter: formatter)
+        let item = data[indexPath.item]
+        cell.model = ProjectCell.Model(project: item, formatter: formatter, buttonTapped: { m in
+            if m.isTracking {
+                self.data[indexPath.item].stop()
+                self.timer?.invalidate()
+                self.timer = nil
+            } else {
+                self.data[indexPath.item].start()
+                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                    cell.model = ProjectCell.Model(project: self.data[indexPath.item], formatter: self.formatter, buttonTapped: m.buttonTapped)
+                }
+            }
+            return ProjectCell.Model(project: self.data[indexPath.item], formatter: self.formatter, buttonTapped: m.buttonTapped)
+        })
         return cell
     }
 }
