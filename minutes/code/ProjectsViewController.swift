@@ -24,7 +24,9 @@ final class ProjectsViewController: UIViewController {
         return Project(identifier: "\($0)", name: "Project #\($0 + 1)")
     }
 
-    var timer: Timer?
+    fileprivate var timer: Timer?
+
+    var trackingProject: Project?
 
     init() {
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -78,20 +80,26 @@ extension ProjectsViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
-        let item = data[indexPath.item]
-        cell.model = ProjectCell.Model(project: item, formatter: formatter, buttonTapped: { m in
-            if m.isTracking {
-                self.data[indexPath.item].stop()
+
+        let project = data[indexPath.item]
+        cell.configure(with: project, formatter: formatter)
+        cell.startButtonCallback = {
+            if project.isTracking {
+                self.trackingProject = nil
+                project.stop()
+                cell.configure(with: project, formatter: self.formatter)
+            } else {
+                project.start()
+                self.trackingProject = project
+                cell.configure(with: project, formatter: self.formatter)
                 self.timer?.invalidate()
                 self.timer = nil
-            } else {
-                self.data[indexPath.item].start()
-                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                    cell.model = ProjectCell.Model(project: self.data[indexPath.item], formatter: self.formatter, buttonTapped: m.buttonTapped)
+                self.timer = Timer(timeInterval: 1, repeats: true) { _ in
+                    cell.configure(with: project, formatter: self.formatter)
                 }
+                RunLoop.current.add(self.timer!, forMode: .commonModes)
             }
-            return ProjectCell.Model(project: self.data[indexPath.item], formatter: self.formatter, buttonTapped: m.buttonTapped)
-        })
+        }
         return cell
     }
 }

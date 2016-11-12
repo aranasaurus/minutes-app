@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Project {
+class Project {
     struct Session {
         let rate: Double = 0
         let startTime: Date = Date()
@@ -25,12 +25,17 @@ struct Project {
 
     var sessions: [Session] = [] {
         didSet {
-            time = sessions.reduce(0) { $0 + $1.duration }
+            recordedTime = sessions
+                .filter { $0.endTime != nil }
+                .reduce(0) { return $0 + $1.duration }
         }
     }
+    var recordedTime: TimeInterval = 0
+    var trackingTime: TimeInterval { return abs(trackingSession?.startTime.timeIntervalSinceNow ?? 0) }
+    var totalTime: TimeInterval { return recordedTime + trackingTime }
 
     private(set) var trackingSession: Session?
-    private(set) var time: TimeInterval = 0
+    var isTracking: Bool { return trackingSession != nil }
 
     init(identifier: String, name: String, rate: Double = 0, sessions: [Session] = []) {
         self.identifier = identifier
@@ -39,14 +44,19 @@ struct Project {
         self.sessions = sessions
     }
 
-    mutating func start() {
+    func start() {
         trackingSession = Session()
     }
 
-    mutating func stop() {
+    func stop() {
         guard var session = trackingSession else { return }
         session.endTime = Date()
         sessions.append(session)
         trackingSession = nil
     }
+}
+
+extension Project: Equatable { }
+func ==(a: Project, b: Project) -> Bool {
+    return a.identifier == b.identifier
 }

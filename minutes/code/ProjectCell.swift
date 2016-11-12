@@ -13,41 +13,24 @@ import Cartography
 class ProjectCell: UICollectionViewCell {
     static let reuseIdentifier = "ProjectCell"
 
-    struct Model {
-        let identifier: String
-        let name: String
-        let time: String?
-        let isTracking: Bool
-        let buttonTapped: (Model) -> Model
-
-        init(project: Project, formatter: DateComponentsFormatter, buttonTapped: @escaping (Model) -> Model) {
-            self.identifier = project.identifier
-            self.name = project.name
-            self.time = formatter.string(from: project.time + abs(project.trackingSession?.startTime.timeIntervalSinceNow ?? 0))
-            self.isTracking = project.trackingSession != nil
-            self.buttonTapped = buttonTapped
-        }
-    }
-
     let imgView: UIImageView
     let nameLabel: UILabel
     let timeLabel: UILabel
     let priceLabel: UILabel
     let startButton: UIButton
+    var startButtonCallback: (() -> Void)?
 
-    var model: Model? {
-        didSet {
-            nameLabel.text = model?.name
-            timeLabel.text = model?.time
-            if model?.isTracking ?? false {
-                startButton.setTitle("Stop", for: .normal)
-                startButton.backgroundColor = Colors.contrast
-                timeLabel.textColor = Colors.contrast
-            } else {
-                startButton.setTitle("Start", for: .normal)
-                startButton.backgroundColor = Colors.primary
-                timeLabel.textColor = Colors.primary
-            }
+    func configure(with project: Project, formatter: DateComponentsFormatter) {
+        nameLabel.text = project.name
+        timeLabel.text = formatter.string(from: project.totalTime)
+        if project.isTracking {
+            startButton.setTitle("Stop", for: .normal)
+            startButton.backgroundColor = Colors.contrast
+            timeLabel.textColor = Colors.contrast
+        } else {
+            startButton.setTitle("Start", for: .normal)
+            startButton.backgroundColor = Colors.primary
+            timeLabel.textColor = Colors.primary
         }
     }
 
@@ -78,7 +61,6 @@ class ProjectCell: UICollectionViewCell {
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 28)
         startButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(startButton)
-
         constrain(nameLabel, timeLabel, startButton, contentView) { name, time, button, container in
             name.top == container.topMargin
             name.leading == container.leadingMargin
@@ -101,8 +83,7 @@ class ProjectCell: UICollectionViewCell {
     }
 
     @objc private func buttonTapped() {
-        guard let model = model else { return }
-        self.model = model.buttonTapped(model)
+        startButtonCallback?()
     }
 }
 
