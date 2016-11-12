@@ -26,10 +26,14 @@ class ProjectCell: UICollectionViewCell {
         if project.isTracking {
             startButton.setTitle("Stop", for: .normal)
             startButton.backgroundColor = Colors.contrast
+            contentView.layer.borderColor = Colors.contrast.cgColor
+            contentView.layer.borderWidth = 2
             timeLabel.textColor = Colors.contrast
         } else {
             startButton.setTitle("Start", for: .normal)
             startButton.backgroundColor = Colors.primary
+            contentView.layer.borderColor = Colors.primary.cgColor
+            contentView.layer.borderWidth = 1
             timeLabel.textColor = Colors.primary
         }
     }
