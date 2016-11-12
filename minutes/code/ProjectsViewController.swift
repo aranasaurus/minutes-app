@@ -84,16 +84,23 @@ extension ProjectsViewController: UICollectionViewDataSource {
         let project = data[indexPath.item]
         cell.configure(with: project, formatter: formatter)
         cell.startButtonCallback = {
-            if project.isTracking {
+            defer { cell.configure(with: project, formatter: self.formatter) }
+            
+            if project.isTracking { // Stop tracking
                 self.trackingProject = nil
-                project.stop()
-                cell.configure(with: project, formatter: self.formatter)
-            } else {
-                project.start()
-                self.trackingProject = project
-                cell.configure(with: project, formatter: self.formatter)
                 self.timer?.invalidate()
                 self.timer = nil
+                project.stop()
+            } else { // Start tracking (stop previous first)
+                if let prev = self.trackingProject, let prevIndex = self.data.index(of: prev) {
+                    prev.stop()
+                    self.timer?.invalidate()
+                    self.timer = nil
+                    collectionView.reloadItems(at: [IndexPath(item: prevIndex, section: 0)])
+                }
+
+                project.start()
+                self.trackingProject = project
                 self.timer = Timer(timeInterval: 1, repeats: true) { _ in
                     cell.configure(with: project, formatter: self.formatter)
                 }
