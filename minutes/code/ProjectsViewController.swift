@@ -20,15 +20,16 @@ final class ProjectsViewController: UIViewController {
         return f
     }()
 
-    var data = stride(from: 0, to: 10, by: 1).map {
-        return Project(identifier: "\($0)", name: "Project #\($0 + 1)")
-    }
+    var projects = [Project]()
+
+    let dataStore: DataStore<Project>
 
     fileprivate var timer: Timer?
 
     var trackingProject: Project?
 
-    init() {
+    init(dataStore: DataStore<Project> = DataStore()) {
+        self.dataStore = dataStore
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         self.statusBarBackground = UIView(frame: .zero)
 
@@ -69,22 +70,47 @@ final class ProjectsViewController: UIViewController {
         }
 
         view.bringSubview(toFront: statusBarBackground)
+//        for i in 0...10 {
+//            dataStore.data.append(Project(identifier: "\(i)", name: "Project #\(i + 1)"))
+//        }
+//        print(dataStore.save())
+        reloadProjects()
+
+        if let tracking = projects.index(where: { $0.isTracking }) {
+            let project = projects[tracking]
+            trackingProject = project
+            timer = Timer(timeInterval: 1, repeats: true) { _ in
+                self.collectionView.reloadItems(at: [IndexPath(item: tracking, section: 0)])
+            }
+            RunLoop.current.add(self.timer!, forMode: .commonModes)
+        }
     }
 
+    func reloadProjects() {
+        dataStore.load()
+        projects = dataStore.data.sorted { a, b in
+            return (a.sessionsByStartDate.first?.startTime ?? Date.distantFuture) < (b.sessionsByStartDate.first?.startTime ?? Date.distantFuture)
+        }
+    }
 }
 
 extension ProjectsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        return projects.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
 
-        let project = data[indexPath.item]
+        let project = projects[indexPath.item]
+        
+        // TODO: Refactor this to use a delegate pattern for the button callback. This way is having some issues with resuming from being backgrounded, that situation makes it so you have to tap the button a bunch of times to get it to register.
         cell.configure(with: project, formatter: formatter)
         cell.startButtonCallback = {
-            defer { cell.configure(with: project, formatter: self.formatter) }
+            defer {
+                cell.configure(with: project, formatter: self.formatter)
+                self.dataStore.save()
+            }
             
             if project.isTracking { // Stop tracking
                 self.trackingProject = nil
@@ -92,7 +118,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
                 self.timer = nil
                 project.stop()
             } else { // Start tracking (stop previous first)
-                if let prev = self.trackingProject, let prevIndex = self.data.index(of: prev) {
+                if let prev = self.trackingProject, let prevIndex = self.projects.index(of: prev) {
                     prev.stop()
                     self.timer?.invalidate()
                     self.timer = nil
@@ -107,6 +133,7 @@ extension ProjectsViewController: UICollectionViewDataSource {
                 RunLoop.current.add(self.timer!, forMode: .commonModes)
             }
         }
+
         return cell
     }
 }

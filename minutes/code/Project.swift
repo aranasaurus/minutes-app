@@ -8,40 +8,59 @@
 
 import Foundation
 
-class Project {
+final class Project: NSObject {
+    struct Keys {
+        static let identifier = "identifier"
+        static let name = "name"
+        static let sessions = "sessions"
+        static let trackingSession = "trackingSession"
+    }
+
     struct Session {
-        let rate: Double = 0
-        let startTime: Date = Date()
-        var endTime: Date? = nil
+        struct Keys {
+            static let rate = "rate"
+            static let startTime = "startTime"
+            static let endTime = "endTime"
+        }
+        let rate: Double
+        let startTime: Date
+        var endTime: Date?
 
         var duration: TimeInterval {
             return abs(startTime.timeIntervalSince(endTime ?? Date()))
+        }
+
+        init(rate: Double = 0, startTime: Date = Date(), endTime: Date? = nil) {
+            self.rate = rate
+            self.startTime = startTime
+            self.endTime = endTime
         }
     }
 
     let identifier: String
     let name: String
-    let rate: Double
 
     var sessions: [Session] = [] {
         didSet {
-            recordedTime = sessions
-                .filter { $0.endTime != nil }
-                .reduce(0) { return $0 + $1.duration }
+            refreshSessionStats()
         }
     }
+    var sessionsByStartDate: [Session] = []
     var recordedTime: TimeInterval = 0
+    fileprivate(set) var trackingSession: Session?
+
     var trackingTime: TimeInterval { return abs(trackingSession?.startTime.timeIntervalSinceNow ?? 0) }
     var totalTime: TimeInterval { return recordedTime + trackingTime }
-
-    private(set) var trackingSession: Session?
     var isTracking: Bool { return trackingSession != nil }
 
-    init(identifier: String, name: String, rate: Double = 0, sessions: [Session] = []) {
+    init(identifier: String, name: String, sessions: [Session] = []) {
         self.identifier = identifier
         self.name = name
-        self.rate = rate
         self.sessions = sessions
+
+        super.init()
+
+        refreshSessionStats()
     }
 
     func start() {
@@ -54,9 +73,67 @@ class Project {
         sessions.append(session)
         trackingSession = nil
     }
+
+    private func refreshSessionStats() {
+        recordedTime = sessions
+            .filter { $0.endTime != nil }
+            .reduce(0) { return $0 + $1.duration }
+        sessionsByStartDate = sessions.sorted { a, b in
+            return a.startTime < b.startTime
+        }
+    }
 }
 
-extension Project: Equatable { }
-func ==(a: Project, b: Project) -> Bool {
-    return a.identifier == b.identifier
+extension Project: NSCoding {
+    convenience init?(coder aDecoder: NSCoder) {
+        guard
+            let identifier = aDecoder.decodeObject(forKey: Keys.identifier) as? String,
+            let name = aDecoder.decodeObject(forKey: Keys.name) as? String
+            else { return nil }
+        let sessions = Session.parse(from: aDecoder.decodeObject(forKey: Keys.sessions) as? [[String: Any]] ?? [])
+        self.init(identifier: identifier, name: name, sessions: sessions)
+
+        if let trackingDict = aDecoder.decodeObject(forKey: Keys.trackingSession) as? [String: Any] {
+            trackingSession = Session.parse(from: trackingDict)
+        }
+    }
+
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(identifier, forKey: Keys.identifier)
+        aCoder.encode(name, forKey: Keys.name)
+        let sessions = self.sessions.map(Session.dictionary(for:))
+        aCoder.encode(sessions, forKey: Keys.sessions)
+        if let tracking = trackingSession {
+            aCoder.encode(Session.dictionary(for: tracking), forKey: Keys.trackingSession)
+        }
+    }
+}
+
+extension Project.Session {
+    static func dictionary(for session: Project.Session) -> [String: Any] {
+        var d: [String: Any] = [
+            Keys.rate: session.rate,
+            Keys.startTime: session.startTime
+        ]
+        if let end = session.endTime {
+            d[Keys.endTime] = end
+        }
+        return d
+    }
+
+    static func parse(from dictionary: [String: Any]) -> Project.Session? {
+        guard
+            let rate = dictionary[Keys.rate] as? Double,
+            let startTime = dictionary[Keys.startTime] as? Date
+            else { return nil }
+        return Project.Session(rate: rate, startTime: startTime, endTime: dictionary[Keys.endTime] as? Date)
+    }
+
+    static func parse(from array: [[String: Any]]) -> [Project.Session] {
+        return array.flatMap(Project.Session.parse(from:))
+    }
+}
+
+extension Project: Storable {
+    static var pluralName: String { return "projects" }
 }

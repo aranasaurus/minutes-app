@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		549D1E1E7EFD772C6C508461 /* Pods_Minutes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC9EF1540900DFF816178A5 /* Pods_Minutes.framework */; };
 		72BADCB87EC4E142F4488E06 /* Pods_minutesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF78531D73A52D6FE41ECC2 /* Pods_minutesTests.framework */; };
+		9419755C1DD7B4530096650C /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419755B1DD7B4530096650C /* DataStore.swift */; };
 		944AC3181DC71059009CFF00 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944AC3171DC71059009CFF00 /* Colors.swift */; };
 		944AC31A1DC721D5009CFF00 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944AC3191DC721D5009CFF00 /* ProjectCell.swift */; };
 		946485BA1DC5070900A5CE0A /* ProjectsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946485B91DC5070900A5CE0A /* ProjectsViewController.swift */; };
@@ -35,6 +36,7 @@
 		630C756114AC1A9EB233BE75 /* Pods-Minutes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Minutes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Minutes/Pods-Minutes.debug.xcconfig"; sourceTree = "<group>"; };
 		6BC9EF1540900DFF816178A5 /* Pods_Minutes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Minutes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72063D8FAF8C0C5CB055F248 /* Pods-Minutes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Minutes.release.xcconfig"; path = "Pods/Target Support Files/Pods-Minutes/Pods-Minutes.release.xcconfig"; sourceTree = "<group>"; };
+		9419755B1DD7B4530096650C /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		944AC3171DC71059009CFF00 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		944AC3191DC721D5009CFF00 /* ProjectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
 		946485B91DC5070900A5CE0A /* ProjectsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				944AC3191DC721D5009CFF00 /* ProjectCell.swift */,
 				94A677D61DC680390097D486 /* Project.swift */,
 				944AC3171DC71059009CFF00 /* Colors.swift */,
+				9419755B1DD7B4530096650C /* DataStore.swift */,
 			);
 			path = code;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94A677D71DC680390097D486 /* Project.swift in Sources */,
+				9419755C1DD7B4530096650C /* DataStore.swift in Sources */,
 				944AC3181DC71059009CFF00 /* Colors.swift in Sources */,
 				946485BA1DC5070900A5CE0A /* ProjectsViewController.swift in Sources */,
 				944AC31A1DC721D5009CFF00 /* ProjectCell.swift in Sources */,
