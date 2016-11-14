@@ -9,6 +9,10 @@
 import UIKit
 import Cartography
 
+protocol ProjectCellDelegate: class {
+    var durationFormatter: DateComponentsFormatter { get }
+    func buttonTapped(at indexPath: IndexPath)
+}
 
 class ProjectCell: UICollectionViewCell {
     static let reuseIdentifier = "ProjectCell"
@@ -18,25 +22,10 @@ class ProjectCell: UICollectionViewCell {
     let timeLabel: UILabel
     let priceLabel: UILabel
     let startButton: UIButton
-    var startButtonCallback: (() -> Void)?
 
-    func configure(with project: Project, formatter: DateComponentsFormatter) {
-        nameLabel.text = project.name
-        timeLabel.text = formatter.string(from: project.totalTime)
-        if project.isTracking {
-            startButton.setTitle("Stop", for: .normal)
-            startButton.backgroundColor = Colors.contrast
-            contentView.layer.borderColor = Colors.contrast.cgColor
-            contentView.layer.borderWidth = 2
-            timeLabel.textColor = Colors.contrast
-        } else {
-            startButton.setTitle("Start", for: .normal)
-            startButton.backgroundColor = Colors.primary
-            contentView.layer.borderColor = Colors.primary.cgColor
-            contentView.layer.borderWidth = 1
-            timeLabel.textColor = Colors.primary
-        }
-    }
+    weak var delegate: ProjectCellDelegate?
+    var indexPath: IndexPath!
+    var timer: Timer?
 
     override init(frame: CGRect) {
         imgView = UIImageView(frame: .zero)
@@ -87,8 +76,36 @@ class ProjectCell: UICollectionViewCell {
     }
 
     @objc private func buttonTapped() {
-        startButtonCallback?()
+        delegate?.buttonTapped(at: indexPath)
+    }
+
+    func configure(with project: Project, at indexPath: IndexPath? = nil, delegate: ProjectCellDelegate?) {
+        self.delegate = delegate
+        self.indexPath = indexPath ?? self.indexPath
+        nameLabel.text = project.name
+        timeLabel.text = delegate?.durationFormatter.string(from: project.totalTime)
+
+        if project.isTracking {
+            timer?.invalidate()
+            timer = Timer(timeInterval: 1, repeats: true) { _ in
+                self.timeLabel.text = self.delegate?.durationFormatter.string(from: project.totalTime)
+            }
+            RunLoop.current.add(timer!, forMode: .commonModes)
+
+            startButton.setTitle("Stop", for: .normal)
+            startButton.backgroundColor = Colors.contrast
+            contentView.layer.borderColor = Colors.contrast.cgColor
+            contentView.layer.borderWidth = 2
+            timeLabel.textColor = Colors.contrast
+        } else {
+            timer?.invalidate()
+            timer = nil
+
+            startButton.setTitle("Start", for: .normal)
+            startButton.backgroundColor = Colors.primary
+            contentView.layer.borderColor = Colors.primary.cgColor
+            contentView.layer.borderWidth = 1
+            timeLabel.textColor = Colors.primary
+        }
     }
 }
-
-

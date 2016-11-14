@@ -13,7 +13,7 @@ final class ProjectsViewController: UIViewController {
     var statusBarBackground: UIView
     var collectionView: UICollectionView
 
-    let formatter: DateComponentsFormatter = {
+    let durationFormatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
         f.allowedUnits = [.hour, .minute, .second]
         f.zeroFormattingBehavior = .pad
@@ -23,8 +23,6 @@ final class ProjectsViewController: UIViewController {
     var projects = [Project]()
 
     let dataStore: DataStore<Project>
-
-    fileprivate var timer: Timer?
 
     var trackingProject: Project?
 
@@ -79,10 +77,6 @@ final class ProjectsViewController: UIViewController {
         if let tracking = projects.index(where: { $0.isTracking }) {
             let project = projects[tracking]
             trackingProject = project
-            timer = Timer(timeInterval: 1, repeats: true) { _ in
-                self.collectionView.reloadItems(at: [IndexPath(item: tracking, section: 0)])
-            }
-            RunLoop.current.add(self.timer!, forMode: .commonModes)
         }
     }
 
@@ -103,37 +97,8 @@ extension ProjectsViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProjectCell.reuseIdentifier, for: indexPath) as! ProjectCell
 
         let project = projects[indexPath.item]
-        
-        // TODO: Refactor this to use a delegate pattern for the button callback. This way is having some issues with resuming from being backgrounded, that situation makes it so you have to tap the button a bunch of times to get it to register.
-        cell.configure(with: project, formatter: formatter)
-        cell.startButtonCallback = {
-            defer {
-                cell.configure(with: project, formatter: self.formatter)
-                self.dataStore.save()
-            }
-            
-            if project.isTracking { // Stop tracking
-                self.trackingProject = nil
-                self.timer?.invalidate()
-                self.timer = nil
-                project.stop()
-            } else { // Start tracking (stop previous first)
-                if let prev = self.trackingProject, let prevIndex = self.projects.index(of: prev) {
-                    prev.stop()
-                    self.timer?.invalidate()
-                    self.timer = nil
-                    collectionView.reloadItems(at: [IndexPath(item: prevIndex, section: 0)])
-                }
 
-                project.start()
-                self.trackingProject = project
-                self.timer = Timer(timeInterval: 1, repeats: true) { _ in
-                    cell.configure(with: project, formatter: self.formatter)
-                }
-                RunLoop.current.add(self.timer!, forMode: .commonModes)
-            }
-        }
-
+        cell.configure(with: project, at: indexPath, delegate: self)
         return cell
     }
 }
@@ -141,5 +106,29 @@ extension ProjectsViewController: UICollectionViewDataSource {
 extension ProjectsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 16, height: 128)
+    }
+}
+
+extension ProjectsViewController: ProjectCellDelegate {
+    func buttonTapped(at indexPath: IndexPath) {
+        let project = projects[indexPath.item]
+        var indexPaths = [indexPath]
+        defer {
+            collectionView.reloadItems(at: indexPaths)
+            dataStore.save()
+        }
+
+        if project.isTracking { // Stop tracking
+            trackingProject = nil
+            project.stop()
+        } else { // Start tracking (stop previous first)
+            if let prev = self.trackingProject, let prevIndex = self.projects.index(of: prev) {
+                prev.stop()
+                indexPaths.append(IndexPath(item: prevIndex, section: 0))
+            }
+
+            project.start()
+            trackingProject = project
+        }
     }
 }
