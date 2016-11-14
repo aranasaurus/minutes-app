@@ -20,7 +20,7 @@ final class ProjectsViewController: UIViewController {
         return f
     }()
 
-    var projects = [Project]()
+    var projects: [Project] { return dataStore.data }
 
     let dataStore: DataStore<Project>
 
@@ -68,22 +68,12 @@ final class ProjectsViewController: UIViewController {
         }
 
         view.bringSubview(toFront: statusBarBackground)
-//        for i in 0...10 {
-//            dataStore.data.append(Project(identifier: "\(i)", name: "Project #\(i + 1)"))
-//        }
-//        print(dataStore.save())
-        reloadProjects()
+
+        dataStore.load()
 
         if let tracking = projects.index(where: { $0.isTracking }) {
             let project = projects[tracking]
             trackingProject = project
-        }
-    }
-
-    func reloadProjects() {
-        dataStore.load()
-        projects = dataStore.data.sorted { a, b in
-            return (a.sessionsByStartDate.first?.startTime ?? Date.distantFuture) < (b.sessionsByStartDate.first?.startTime ?? Date.distantFuture)
         }
     }
 }

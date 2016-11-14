@@ -37,7 +37,7 @@ final class Project: NSObject {
         }
     }
 
-    let identifier: String
+    let identifier: Int
     let name: String
 
     var sessions: [Session] = [] {
@@ -53,7 +53,7 @@ final class Project: NSObject {
     var totalTime: TimeInterval { return recordedTime + trackingTime }
     var isTracking: Bool { return trackingSession != nil }
 
-    init(identifier: String, name: String, sessions: [Session] = []) {
+    init(identifier: Int, name: String, sessions: [Session] = []) {
         self.identifier = identifier
         self.name = name
         self.sessions = sessions
@@ -86,10 +86,9 @@ final class Project: NSObject {
 
 extension Project: NSCoding {
     convenience init?(coder aDecoder: NSCoder) {
-        guard
-            let identifier = aDecoder.decodeObject(forKey: Keys.identifier) as? String,
-            let name = aDecoder.decodeObject(forKey: Keys.name) as? String
-            else { return nil }
+        guard let name = aDecoder.decodeObject(forKey: Keys.name) as? String else { return nil }
+
+        let identifier = aDecoder.decodeInteger(forKey: Keys.identifier)
         let sessions = Session.parse(from: aDecoder.decodeObject(forKey: Keys.sessions) as? [[String: Any]] ?? [])
         self.init(identifier: identifier, name: name, sessions: sessions)
 
@@ -136,4 +135,13 @@ extension Project.Session {
 
 extension Project: Storable {
     static var pluralName: String { return "projects" }
+}
+
+extension DataStore where DataType: Project {
+    func generateSampleData(items: Int, save: Bool) {
+        for i in 0..<items {
+            data.append(Project(identifier: i, name: "Project #\(i + 1)") as! DataType)
+        }
+        if save { self.save() }
+    }
 }
