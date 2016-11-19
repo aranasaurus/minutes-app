@@ -19,6 +19,11 @@ final class ProjectsViewController: UIViewController {
         f.zeroFormattingBehavior = .pad
         return f
     }()
+    let priceFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .currency
+        return f
+    }()
 
     var projects: [Project] { return dataStore.data }
 
@@ -43,7 +48,7 @@ final class ProjectsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = Colors.darkBackground
+        view.backgroundColor = Colors.darkness
         statusBarBackground.backgroundColor = Colors.primary
         view.addSubview(statusBarBackground)
 
