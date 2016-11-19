@@ -75,6 +75,20 @@ class ProjectCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var isHighlighted: Bool {
+        willSet {
+            contentView.layer.borderColor = newValue ? Colors.secondary.cgColor : Colors.primary.cgColor
+            contentView.layer.borderWidth = newValue ? 4 : 2
+        }
+    }
+
+    override var isSelected: Bool {
+        willSet {
+            contentView.layer.borderColor = newValue ? Colors.secondary.cgColor : Colors.primary.cgColor
+            contentView.layer.borderWidth = newValue ? 4 : 2
+        }
+    }
+
     @objc private func buttonTapped() {
         delegate?.buttonTapped(at: indexPath)
     }
@@ -103,8 +117,10 @@ class ProjectCell: UICollectionViewCell {
 
             startButton.setTitle("Start", for: .normal)
             startButton.backgroundColor = Colors.primary
-            contentView.layer.borderColor = Colors.primary.cgColor
-            contentView.layer.borderWidth = 1
+            if !isSelected {
+                contentView.layer.borderColor = Colors.primary.cgColor
+                contentView.layer.borderWidth = 2
+            }
             timeLabel.textColor = Colors.primary
         }
     }
