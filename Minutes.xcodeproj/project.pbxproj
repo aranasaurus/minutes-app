@@ -18,6 +18,7 @@
 		9479FC551DC46D4200081E25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9479FC531DC46D4200081E25 /* LaunchScreen.storyboard */; };
 		94A677D71DC680390097D486 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A677D61DC680390097D486 /* Project.swift */; };
 		94A677D91DC68A750097D486 /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A677D81DC68A750097D486 /* TrackerTests.swift */; };
+		94AEDBF91DE105B40009504B /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AEDBF81DE105B40009504B /* AppCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		9479FC611DC46D4200081E25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94A677D61DC680390097D486 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		94A677D81DC68A750097D486 /* TrackerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
+		94AEDBF81DE105B40009504B /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		BDF78531D73A52D6FE41ECC2 /* Pods_minutesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_minutesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -95,12 +97,10 @@
 		946485B81DC4FCCA00A5CE0A /* code */ = {
 			isa = PBXGroup;
 			children = (
+				94AEDBFB1DE109290009504B /* common */,
+				94AEDBFA1DE108230009504B /* projects */,
 				9479FC4A1DC46D4200081E25 /* AppDelegate.swift */,
-				946485B91DC5070900A5CE0A /* ProjectsViewController.swift */,
-				944AC3191DC721D5009CFF00 /* ProjectCell.swift */,
-				94A677D61DC680390097D486 /* Project.swift */,
-				944AC3171DC71059009CFF00 /* Colors.swift */,
-				9419755B1DD7B4530096650C /* DataStore.swift */,
+				94AEDBF81DE105B40009504B /* AppCoordinator.swift */,
 			);
 			path = code;
 			sourceTree = "<group>";
@@ -143,6 +143,25 @@
 				94A677D81DC68A750097D486 /* TrackerTests.swift */,
 			);
 			path = minutesTests;
+			sourceTree = "<group>";
+		};
+		94AEDBFA1DE108230009504B /* projects */ = {
+			isa = PBXGroup;
+			children = (
+				946485B91DC5070900A5CE0A /* ProjectsViewController.swift */,
+				944AC3191DC721D5009CFF00 /* ProjectCell.swift */,
+				94A677D61DC680390097D486 /* Project.swift */,
+			);
+			path = projects;
+			sourceTree = "<group>";
+		};
+		94AEDBFB1DE109290009504B /* common */ = {
+			isa = PBXGroup;
+			children = (
+				944AC3171DC71059009CFF00 /* Colors.swift */,
+				9419755B1DD7B4530096650C /* DataStore.swift */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -350,6 +369,7 @@
 				94A677D71DC680390097D486 /* Project.swift in Sources */,
 				9419755C1DD7B4530096650C /* DataStore.swift in Sources */,
 				944AC3181DC71059009CFF00 /* Colors.swift in Sources */,
+				94AEDBF91DE105B40009504B /* AppCoordinator.swift in Sources */,
 				946485BA1DC5070900A5CE0A /* ProjectsViewController.swift in Sources */,
 				944AC31A1DC721D5009CFF00 /* ProjectCell.swift in Sources */,
 				9479FC4B1DC46D4200081E25 /* AppDelegate.swift in Sources */,

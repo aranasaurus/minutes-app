@@ -11,15 +11,14 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    var coordinator: AppCoordinator!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Tests setup their own ViewControllers.
         guard NSClassFromString("XCTest") == nil else { return true }
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window!.rootViewController = ProjectsViewController()
-        window!.makeKeyAndVisible()
+        coordinator = AppCoordinator()
+        coordinator.startUp()
 
         return true
     }
@@ -48,4 +47,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-

@@ -9,9 +9,15 @@
 import UIKit
 import Cartography
 
+protocol ProjectsEventHandler: class {
+    func selectedSessions(for project: Project)
+}
+
 final class ProjectsViewController: UIViewController {
     var statusBarBackground: UIView
     var collectionView: UICollectionView
+
+    weak var eventHandler: ProjectsEventHandler?
 
     let durationFormatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
@@ -31,8 +37,9 @@ final class ProjectsViewController: UIViewController {
 
     var trackingProject: Project?
 
-    init(dataStore: DataStore<Project> = DataStore()) {
+    init(dataStore: DataStore<Project> = DataStore(), eventHandler: ProjectsEventHandler?) {
         self.dataStore = dataStore
+        self.eventHandler = eventHandler
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         self.statusBarBackground = UIView(frame: .zero)
 
@@ -122,6 +129,20 @@ extension ProjectsViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let project = projects[indexPath.item]
+        let popup = UIAlertController(title: project.name, message: nil, preferredStyle: .actionSheet)
+        let action = UIAlertAction(title: "Sessions", style: .default) { _ in
+            self.eventHandler?.selectedSessions(for: project)
+        }
+        popup.addAction(action)
+        let visiblePaths = collectionView.indexPathsForVisibleItems.sorted()
+        if (visiblePaths.index(of: indexPath) ?? 0) > 2 {
+            collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
+        self.present(popup, animated: true, completion: nil)
     }
 }
 
