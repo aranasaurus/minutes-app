@@ -100,7 +100,28 @@ extension ProjectsViewController: UICollectionViewDataSource {
 
 extension ProjectsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width - collectionView.contentInset.left - collectionView.contentInset.right - 16, height: 128)
+        let insets = collectionView.contentInset
+        let width = collectionView.bounds.width - insets.left - insets.right - 16
+        let maxHeight = CGFloat(145)
+        guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return CGSize(width: width, height: maxHeight) }
+        let visibleItems: CGFloat = collectionView.traitCollection.verticalSizeClass == .compact ? 2 : 4
+        let height = min(maxHeight, (collectionView.bounds.height - insets.top - insets.bottom - (layout.minimumLineSpacing * visibleItems + 1)) / visibleItems)
+        return CGSize(width: width, height: height)
+    }
+}
+
+extension ProjectsViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard !(collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false) else {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            return false
+        }
+
+        return true
+    }
+
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }
 

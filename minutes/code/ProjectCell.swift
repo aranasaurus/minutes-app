@@ -28,6 +28,13 @@ class ProjectCell: UICollectionViewCell {
     var timer: Timer?
     var project: Project?
 
+    private let nameFont: UIFont
+    private let nameWeight: CGFloat = 0.33
+    private let timeFont: UIFont
+    private let timeWeight: CGFloat = 0.33
+    private let priceFont: UIFont
+    private let priceWeight: CGFloat = 0.5
+
     override var isHighlighted: Bool {
         willSet {
             updateColors(highlighted: newValue)
@@ -46,6 +53,11 @@ class ProjectCell: UICollectionViewCell {
         priceLabel = UILabel(frame: .zero)
         startButton = UIButton(type: .system)
 
+        let size = UIFont.preferredFont(forTextStyle: .title1).pointSize
+        nameFont = UIFont.systemFont(ofSize: size, weight: nameWeight)
+        priceFont = UIFont.monospacedDigitSystemFont(ofSize: size * 1.25, weight: priceWeight)
+        timeFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: timeWeight)
+
         super.init(frame: frame)
 
         contentView.layer.cornerRadius = 8
@@ -54,28 +66,26 @@ class ProjectCell: UICollectionViewCell {
         contentView.backgroundColor = Colors.lightness
 
         nameLabel.textColor = Colors.primary
-        var size = UIFont.preferredFont(forTextStyle: .title1).pointSize
-        nameLabel.font = UIFont.systemFont(ofSize: size, weight: 0.4)
+        nameLabel.font = nameFont
         nameLabel.lineBreakMode = .byWordWrapping
         nameLabel.numberOfLines = 2
         nameLabel.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
         contentView.addSubview(nameLabel)
 
-        priceLabel.textColor = Colors.secondary
-        size = UIFont.preferredFont(forTextStyle: .title2).pointSize * 1.1
-        priceLabel.font = UIFont.monospacedDigitSystemFont(ofSize: size, weight: 0.5)
+        priceLabel.textColor = Colors.contrast
+        priceLabel.font = priceFont
         contentView.addSubview(priceLabel)
 
         timeLabel.textAlignment = .center
         timeLabel.textColor = Colors.primary
-        timeLabel.font = priceLabel.font
+        timeLabel.font = timeFont
         contentView.addSubview(timeLabel)
 
         startButton.backgroundColor = Colors.primary
         startButton.tintColor = Colors.tint
         startButton.setTitle("Start", for: .normal)
         startButton.layer.cornerRadius = 8
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 28)
+        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 35)
         startButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(startButton)
 
@@ -85,7 +95,7 @@ class ProjectCell: UICollectionViewCell {
             name.trailing == button.leading - 8
             name.bottom <= button.bottom
 
-            price.top == time.top
+            price.firstBaseline == time.firstBaseline
             price.bottom == time.bottom
             price.leading == name.leading + 4
             price.trailing == container.centerXWithinMargins - 4
@@ -134,6 +144,8 @@ class ProjectCell: UICollectionViewCell {
             timer = nil
 
             startButton.setTitle("Start", for: .normal)
+            nameLabel.font = nameFont
+            timeLabel.font = timeFont
         }
     }
 
@@ -157,18 +169,21 @@ class ProjectCell: UICollectionViewCell {
 
         guard !highlighted && !selected else {
             contentView.layer.borderWidth = 4
-            applyColor(Colors.secondary, borderOnly: project.isTracking)
+            contentView.backgroundColor = Colors.tint
+            applyColor(Colors.contrast, borderOnly: true)
             return
         }
 
         if project.isTracking {
-            applyColor(Colors.contrast)
-            startButton.backgroundColor = Colors.contrast
+            applyColor(Colors.secondary)
+            startButton.backgroundColor = Colors.secondary
             contentView.layer.borderWidth = 4
+            contentView.backgroundColor = Colors.tint
         } else {
             startButton.backgroundColor = Colors.primary
             applyColor(Colors.primary)
             contentView.layer.borderWidth = 2
+            contentView.backgroundColor = Colors.lightness
         }
     }
 
