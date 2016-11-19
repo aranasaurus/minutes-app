@@ -10,7 +10,7 @@ import UIKit
 import Cartography
 
 protocol ProjectsEventHandler: class {
-    func selectedSessions(for project: Project)
+    func selectedProject(_ project: Project)
 }
 
 final class ProjectsViewController: UIViewController {
@@ -132,17 +132,7 @@ extension ProjectsViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let project = projects[indexPath.item]
-        let popup = UIAlertController(title: project.name, message: nil, preferredStyle: .actionSheet)
-        let action = UIAlertAction(title: "Sessions", style: .default) { _ in
-            self.eventHandler?.selectedSessions(for: project)
-        }
-        popup.addAction(action)
-        let visiblePaths = collectionView.indexPathsForVisibleItems.sorted()
-        if (visiblePaths.index(of: indexPath) ?? 0) > 2 {
-            collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
-        }
-        self.present(popup, animated: true, completion: nil)
+        eventHandler?.selectedProject(projects[indexPath.item])
     }
 }
 

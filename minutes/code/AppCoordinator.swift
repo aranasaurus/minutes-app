@@ -21,7 +21,14 @@ class AppCoordinator {
 }
 
 extension AppCoordinator: ProjectsEventHandler {
-    func selectedSessions(for project: Project) {
-        print("Sessions selected for \(project.name)")
+    func selectedProject(_ project: Project) {
+        print("\(project.name) selected.")
+        let popup = UIAlertController(title: project.name, message: nil, preferredStyle: .actionSheet)
+        let action = UIAlertAction(title: "Sessions", style: .default) { _ in
+            print("Sessions selected for \(project.name)")
+        }
+        popup.addAction(action)
+        
+        window.rootViewController?.present(popup, animated: true, completion: nil)
     }
 }
