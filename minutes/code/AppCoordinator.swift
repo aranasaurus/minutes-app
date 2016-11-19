@@ -10,12 +10,15 @@ import UIKit
 
 class AppCoordinator {
     let window: UIWindow
+
+    let projectsDataStore: DataStore<Project>
     init() {
         window = UIWindow(frame: UIScreen.main.bounds)
+        projectsDataStore = DataStore()
     }
 
     func startUp() {
-        window.rootViewController = ProjectsViewController( eventHandler: self)
+        window.rootViewController = ProjectsViewController(dataStore: projectsDataStore, eventHandler: self)
         window.makeKeyAndVisible()
     }
 }

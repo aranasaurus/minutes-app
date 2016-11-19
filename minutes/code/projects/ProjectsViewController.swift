@@ -37,7 +37,7 @@ final class ProjectsViewController: UIViewController {
 
     var trackingProject: Project?
 
-    init(dataStore: DataStore<Project> = DataStore(), eventHandler: ProjectsEventHandler?) {
+    init(dataStore: DataStore<Project>, eventHandler: ProjectsEventHandler?) {
         self.dataStore = dataStore
         self.eventHandler = eventHandler
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())

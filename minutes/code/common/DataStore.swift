@@ -18,7 +18,9 @@ class DataStore<DataType: Storable> {
 
     init(storageURL: URL? = nil) {
         self.storageURL = storageURL ??
-            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(DataType.pluralName)
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                .first!
+                .appendingPathComponent(DataType.pluralName)
         self.load()
     }
 
