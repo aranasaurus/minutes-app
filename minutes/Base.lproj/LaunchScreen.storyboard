@@ -24,7 +24,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Minutes" textAlignment="center" lineBreakMode="clip" baselineAdjustment="none" minimumFontSize="60" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="The-65-zer">
-                                <rect key="frame" x="24" y="238.5" width="327" height="154"/>
+                                <rect key="frame" x="24" y="238" width="327" height="154"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="154" id="Qrk-lm-iTi"/>
                                 </constraints>
@@ -34,11 +34,22 @@
                                 <color key="shadowColor" red="1" green="0.33340460059999999" blue="0.57701140640000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <size key="shadowOffset" width="2" height="2"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Znx-1x-wSj">
+                                <rect key="frame" x="112" y="630" width="150" height="17"/>
+                                <string key="text" base64-UTF8="YES">
+wqkgMjAxNiADYXJhbmFzYXVydXMuY29tA
+</string>
+                                <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="13"/>
+                                <color key="textColor" red="0.0" green="0.94901960780000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.2274509804" green="0.18039215689999999" blue="0.22352941179999999" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="The-65-zer" firstAttribute="firstBaseline" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="0vC-hz-fFR"/>
+                            <constraint firstItem="Znx-1x-wSj" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="R2y-JJ-WQr"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Znx-1x-wSj" secondAttribute="bottom" constant="20" id="l8g-r5-W28"/>
                             <constraint firstItem="The-65-zer" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="sj5-Fp-5Pe"/>
                             <constraint firstItem="The-65-zer" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" constant="-48" id="vYO-N4-QLo"/>
                         </constraints>
