@@ -17,29 +17,6 @@ final class Project: NSObject {
         static let defaultRate = "defaultRate"
     }
 
-    struct Session {
-        struct Keys {
-            static let rate = "rate"
-            static let startTime = "startTime"
-            static let endTime = "endTime"
-        }
-        let rate: Double
-        let startTime: Date
-        var endTime: Date?
-
-        var duration: TimeInterval {
-            return abs(startTime.timeIntervalSince(endTime ?? Date()))
-        }
-
-        var cost: Double { return Measurement(value: duration, unit: UnitDuration.seconds).converted(to: .hours).value * rate }
-
-        init(rate: Double, startTime: Date = Date(), endTime: Date? = nil) {
-            self.rate = rate
-            self.startTime = startTime
-            self.endTime = endTime
-        }
-    }
-
     let identifier: Int
     let name: String
     var defaultRate: Double
@@ -115,31 +92,6 @@ extension Project: NSCoding {
         if let tracking = trackingSession {
             aCoder.encode(Session.dictionary(for: tracking), forKey: Keys.trackingSession)
         }
-    }
-}
-
-extension Project.Session {
-    static func dictionary(for session: Project.Session) -> [String: Any] {
-        var d: [String: Any] = [
-            Keys.rate: session.rate,
-            Keys.startTime: session.startTime
-        ]
-        if let end = session.endTime {
-            d[Keys.endTime] = end
-        }
-        return d
-    }
-
-    static func parse(from dictionary: [String: Any]) -> Project.Session? {
-        guard
-            let rate = dictionary[Keys.rate] as? Double,
-            let startTime = dictionary[Keys.startTime] as? Date
-            else { return nil }
-        return Project.Session(rate: rate, startTime: startTime, endTime: dictionary[Keys.endTime] as? Date)
-    }
-
-    static func parse(from array: [[String: Any]]) -> [Project.Session] {
-        return array.flatMap(Project.Session.parse(from:))
     }
 }
 
