@@ -9,15 +9,13 @@
 import UIKit
 import Cartography
 
-protocol ProjectsEventHandler: class {
-    func selectedProject(_ project: Project)
-}
+typealias ProjectSelectedBlock = (_ project: Project) -> Void
 
 final class ProjectsViewController: UIViewController {
     var statusBarBackground: UIView
     var collectionView: UICollectionView
 
-    weak var eventHandler: ProjectsEventHandler?
+    var projectSelected: ProjectSelectedBlock?
 
     let durationFormatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
@@ -37,9 +35,9 @@ final class ProjectsViewController: UIViewController {
 
     var trackingProject: Project?
 
-    init(dataStore: DataStore<Project>, eventHandler: ProjectsEventHandler?) {
+    init(dataStore: DataStore<Project>, onProjectSelected: ProjectSelectedBlock?) {
         self.dataStore = dataStore
-        self.eventHandler = eventHandler
+        self.projectSelected = onProjectSelected
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         self.statusBarBackground = UIView(frame: .zero)
 
@@ -88,6 +86,11 @@ final class ProjectsViewController: UIViewController {
             trackingProject = project
         }
     }
+
+    func clearSelection(animated: Bool = true) {
+        guard let selected = collectionView.indexPathsForSelectedItems?.first else { return }
+        collectionView.deselectItem(at: selected, animated: animated)
+    }
 }
 
 extension ProjectsViewController: UICollectionViewDataSource {
@@ -132,7 +135,7 @@ extension ProjectsViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        eventHandler?.selectedProject(projects[indexPath.item])
+        projectSelected?(projects[indexPath.item])
     }
 }
 
