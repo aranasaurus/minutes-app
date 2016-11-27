@@ -1,3 +1,5 @@
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=583b537a7eeb2c0100b32d25&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/583b537a7eeb2c0100b32d25/build/latest)
+
 # Minutes
 An iOS app to keep track of time and money spent on projects to help determine a creative work's monetary _cost_ (as opposed to its monetary _value_).
 
