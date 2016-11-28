@@ -12,11 +12,10 @@ import Cartography
 typealias ProjectSelectedBlock = (_ project: Project) -> Void
 
 final class ProjectsViewController: UIViewController {
-    var statusBarBackground: UIView
-    var collectionView: UICollectionView
+    fileprivate var collectionView: UICollectionView
+    private var statusBarBackground: UIView
 
-    var projectSelected: ProjectSelectedBlock?
-
+    // TODO: There's a better way to do these, ViewModel, maybe?
     let durationFormatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
         f.allowedUnits = [.hour, .minute, .second]
@@ -29,11 +28,10 @@ final class ProjectsViewController: UIViewController {
         return f
     }()
 
-    var projects: [Project] { return dataStore.data }
-
-    let dataStore: DataStore<Project>
-
-    var trackingProject: Project?
+    fileprivate var projectSelected: ProjectSelectedBlock?
+    fileprivate var projects: [Project] { return dataStore.data }
+    fileprivate let dataStore: DataStore<Project>
+    fileprivate var trackingProject: Project?
 
     init(dataStore: DataStore<Project>, onProjectSelected: ProjectSelectedBlock?) {
         self.dataStore = dataStore
@@ -90,6 +88,10 @@ final class ProjectsViewController: UIViewController {
     func clearSelection(animated: Bool = true) {
         guard let selected = collectionView.indexPathsForSelectedItems?.first else { return }
         collectionView.deselectItem(at: selected, animated: animated)
+    }
+
+    func remove(at index: Int) {
+        collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
     }
 }
 

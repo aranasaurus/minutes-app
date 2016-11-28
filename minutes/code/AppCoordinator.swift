@@ -11,14 +11,14 @@ import UIKit
 class AppCoordinator {
     let window: UIWindow
 
-    let projectsFlowController: ProjectsFlowController
+    let projectsFlow: ProjectsFlowController
     init() {
         window = UIWindow(frame: UIScreen.main.bounds)
-        projectsFlowController = ProjectsFlowController(dataStore: DataStore())
+        projectsFlow = ProjectsFlowController(dataStore: DataStore())
     }
 
     func startUp() {
-        window.rootViewController = projectsFlowController.root
+        window.rootViewController = projectsFlow.root
         window.makeKeyAndVisible()
     }
 }

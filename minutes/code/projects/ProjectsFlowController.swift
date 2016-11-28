@@ -20,18 +20,19 @@ class ProjectsFlowController {
     func onProjectSelected(project: Project) {
         print("\(project.name) selected.")
         let popup = UIAlertController(title: project.name, message: nil, preferredStyle: .actionSheet)
-        let sessionsAction = UIAlertAction(title: "Sessions", style: .default) { _ in
-            print("Sessions selected for \(project.name)")
+        let delete = UIAlertAction(title: "Delete", style: .destructive) { _ in
+            guard let index = self.dataStore.data.index(of: project) else { return }
+            self.dataStore.data.remove(at: index)
+            self.root.remove(at: index)
+            self.dataStore.save()
         }
-        popup.addAction(sessionsAction)
+        popup.addAction(delete)
 
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
             self.root.clearSelection()
         }
         popup.addAction(cancel)
 
-        root.present(popup, animated: true) {
-            print("here")
-        }
+        root.present(popup, animated: true, completion: nil)
     }
 }

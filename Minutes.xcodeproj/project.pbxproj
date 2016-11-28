@@ -156,10 +156,10 @@
 		94AEDBFA1DE108230009504B /* projects */ = {
 			isa = PBXGroup;
 			children = (
+				946700821DEB796E00FE17EF /* ProjectsFlowController.swift */,
 				946485B91DC5070900A5CE0A /* ProjectsViewController.swift */,
 				944AC3191DC721D5009CFF00 /* ProjectCell.swift */,
 				94A677D61DC680390097D486 /* Project.swift */,
-				946700821DEB796E00FE17EF /* ProjectsFlowController.swift */,
 			);
 			path = projects;
 			sourceTree = "<group>";
