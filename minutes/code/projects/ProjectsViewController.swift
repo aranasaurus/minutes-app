@@ -13,7 +13,6 @@ typealias ProjectSelectedBlock = (_ project: Project) -> Void
 
 final class ProjectsViewController: UIViewController {
     fileprivate var collectionView: UICollectionView
-    private var statusBarBackground: UIView
 
     // TODO: There's a better way to do these, ViewModel, maybe?
     let durationFormatter: DateComponentsFormatter = {
@@ -37,9 +36,10 @@ final class ProjectsViewController: UIViewController {
         self.dataStore = dataStore
         self.projectSelected = onProjectSelected
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        self.statusBarBackground = UIView(frame: .zero)
 
         super.init(nibName: nil, bundle: nil)
+
+        self.title = "Projects"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,30 +52,21 @@ final class ProjectsViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = Colors.darkness
-        statusBarBackground.backgroundColor = Colors.primary
-        view.addSubview(statusBarBackground)
 
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.contentInset = UIEdgeInsets(top: UIApplication.shared.statusBarFrame.height + 8, left: 0, bottom: 0, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
         collectionView.contentOffset = CGPoint(x: 0, y: -collectionView.contentInset.top)
         collectionView.backgroundColor = .clear
         collectionView.register(ProjectCell.self, forCellWithReuseIdentifier: ProjectCell.reuseIdentifier)
         view.addSubview(collectionView)
 
-        constrain(view, statusBarBackground, collectionView) { container, bar, table in
-            bar.top == container.top
-            bar.height == UIApplication.shared.statusBarFrame.height
-            bar.left == container.left
-            bar.right == container.right
-
+        constrain(view, collectionView) { container, table in
             table.top == container.topMargin
             table.leading == container.leading
             table.trailing == container.trailing
             table.bottom == container.bottom
         }
-
-        view.bringSubview(toFront: statusBarBackground)
 
         dataStore.load()
 
