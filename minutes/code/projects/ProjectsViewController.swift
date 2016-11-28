@@ -84,6 +84,10 @@ final class ProjectsViewController: UIViewController {
     func remove(at index: Int) {
         collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
     }
+
+    func reload(at index: Int) {
+        collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+    }
 }
 
 extension ProjectsViewController: UICollectionViewDataSource {

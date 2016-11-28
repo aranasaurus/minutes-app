@@ -18,7 +18,7 @@ final class Project: NSObject {
     }
 
     let identifier: Int
-    let name: String
+    var name: String
     var defaultRate: Double
 
     var sessions: [Session] = [] {
