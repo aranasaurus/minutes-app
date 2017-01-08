@@ -9,6 +9,18 @@
 import UIKit
 
 class ProjectsFlowController: NSObject {
+    static let moneyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currencyAccounting
+        formatter.currencyGroupingSeparator = ","
+        return formatter
+    }()
+
+    fileprivate enum TextFields: Int {
+        case rename
+        case setRate
+    }
+
     let dataStore: DataStore<Project>
     var root: ProjectsViewController!
     var selectedProject: Project? = nil
@@ -34,12 +46,29 @@ class ProjectsFlowController: NSObject {
                 textField.autocapitalizationType = .words
                 textField.returnKeyType = .done
                 textField.delegate = self
+                textField.tag = TextFields.rename.rawValue
             }
             alert.addAction(UIAlertAction(title: "Save", style: .default, handler: nil))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.root.present(alert, animated: true, completion: nil)
         }
         popup.addAction(rename)
+
+        let setRate = UIAlertAction(title: "Set Rate", style: .default) { _ in
+            let alert = UIAlertController(title: "Set Rate", message: nil, preferredStyle: .alert)
+            alert.addTextField { textField in
+                textField.text = ProjectsFlowController.moneyFormatter.string(from: NSNumber(floatLiteral: project.defaultRate))
+                textField.clearButtonMode = .never
+                textField.keyboardType = .numbersAndPunctuation
+                textField.returnKeyType = .done
+                textField.delegate = self
+                textField.tag = TextFields.setRate.rawValue
+            }
+            alert.addAction(UIAlertAction(title: "Save", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.root.present(alert, animated: true, completion: nil)
+        }
+        popup.addAction(setRate)
 
         let delete = UIAlertAction(title: "Delete", style: .destructive) { _ in
             guard let index = self.dataStore.data.index(of: project) else { return }
@@ -60,9 +89,24 @@ class ProjectsFlowController: NSObject {
 
 extension ProjectsFlowController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
-        guard let project = selectedProject else { return }
-        project.name = textField.text ?? project.name
-        dataStore.save()
+        guard
+            let project = selectedProject,
+            let field = TextFields.init(rawValue: textField.tag)
+            else { return }
+
+        switch field {
+        case .rename:
+            project.name = textField.text ?? project.name
+            dataStore.save()
+        case .setRate:
+            guard
+                let text = textField.text,
+                let rate = ProjectsFlowController.moneyFormatter.number(from: text)?.doubleValue
+                else { return }
+            project.defaultRate = rate
+            dataStore.save()
+        }
+
         guard let index = dataStore.data.index(of: project) else { return }
         root.reload(at: index)
     }
