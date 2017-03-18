@@ -19,8 +19,8 @@ class AppCoordinator {
 
     func startUp() {
         let nav = UINavigationController(rootViewController: projectsFlow.root)
-        nav.navigationBar.tintColor = Colors.tint
-        nav.navigationBar.barTintColor = Colors.primary
+        nav.navigationBar.tintColor = Colors.actionable.base
+        nav.navigationBar.barTintColor = Colors.primary.dark
         nav.navigationBar.isTranslucent = false
         nav.navigationBar.barStyle = .black
         window.rootViewController = nav

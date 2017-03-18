@@ -51,7 +51,7 @@ final class ProjectsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = Colors.darkness
+        view.backgroundColor = Colors.background.dark
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -109,7 +109,7 @@ extension ProjectsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let insets = collectionView.contentInset
         let width = collectionView.bounds.width - insets.left - insets.right - 16
-        let maxHeight = CGFloat(145)
+        let maxHeight = CGFloat(128)
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else { return CGSize(width: width, height: maxHeight) }
         let visibleItems: CGFloat = collectionView.traitCollection.verticalSizeClass == .compact ? 2 : 4
         let height = min(maxHeight, (collectionView.bounds.height - insets.top - insets.bottom - (layout.minimumLineSpacing * visibleItems + 1)) / visibleItems)

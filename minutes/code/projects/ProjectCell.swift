@@ -61,31 +61,24 @@ class ProjectCell: UICollectionViewCell {
         super.init(frame: frame)
 
         contentView.layer.cornerRadius = 8
-        contentView.layer.borderColor = Colors.primary.cgColor
         contentView.layer.borderWidth = 1
-        contentView.backgroundColor = Colors.lightness
 
-        nameLabel.textColor = Colors.primary
         nameLabel.font = nameFont
         nameLabel.lineBreakMode = .byWordWrapping
         nameLabel.numberOfLines = 2
         nameLabel.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
         contentView.addSubview(nameLabel)
 
-        priceLabel.textColor = Colors.contrast
         priceLabel.font = priceFont
         contentView.addSubview(priceLabel)
 
         timeLabel.textAlignment = .center
-        timeLabel.textColor = Colors.primary
         timeLabel.font = timeFont
         contentView.addSubview(timeLabel)
 
-        startButton.backgroundColor = Colors.primary
-        startButton.tintColor = Colors.tint
         startButton.setTitle("Start", for: .normal)
         startButton.layer.cornerRadius = 8
-        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 35)
+        startButton.titleLabel?.font = UIFont.systemFont(ofSize: 26)
         startButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         contentView.addSubview(startButton)
 
@@ -101,11 +94,11 @@ class ProjectCell: UICollectionViewCell {
             price.trailing == container.centerXWithinMargins - 4
 
             button.top == container.topMargin + 2
-            button.bottom == container.centerYWithinMargins + 6
+            button.bottom == container.centerYWithinMargins - 2
             button.width == container.width * 0.333
             button.trailing == container.trailingMargin - 2
 
-            time.top == button.bottom + 4
+            time.top == container.centerYWithinMargins + 2
             time.bottom == container.bottomMargin
             time.leading == button.leading
             time.trailing == button.trailing
@@ -153,45 +146,42 @@ class ProjectCell: UICollectionViewCell {
         let highlighted = highlighted ?? isHighlighted
         let selected = selected ?? isSelected
 
+        startButton.tintColor = Colors.actionable.base
+
         guard let project = self.project else {
-            priceLabel.textColor = Colors.lightness
+            priceLabel.textColor = .clear
             return
         }
 
         switch project.cost {
         case 0.01...DBL_MAX:
-            priceLabel.textColor = Colors.secondaryContrast
+            priceLabel.textColor = Colors.negative.base
         case -DBL_MAX ... -0.01:
-            priceLabel.textColor = Colors.secondary
+            priceLabel.textColor = Colors.positive.base
         default:
-            priceLabel.textColor = Colors.lightness
+            priceLabel.textColor = .clear
         }
 
-        guard !highlighted && !selected else {
-            contentView.layer.borderWidth = 4
-            contentView.backgroundColor = Colors.tint
-            applyColor(Colors.contrast, borderOnly: true)
+        guard highlighted || selected || project.isTracking else {
+            contentView.layer.borderColor = Colors.primary.dark.cgColor
+            contentView.layer.borderWidth = 2
+            contentView.backgroundColor = Colors.background.light
+
+            startButton.backgroundColor = Colors.primary.base
+            nameLabel.textColor = Colors.primary.base
+            timeLabel.textColor = Colors.primary.subdued
             return
         }
 
-        if project.isTracking {
-            applyColor(Colors.secondary)
-            startButton.backgroundColor = Colors.secondary
-            contentView.layer.borderWidth = 4
-            contentView.backgroundColor = Colors.tint
-        } else {
-            startButton.backgroundColor = Colors.primary
-            applyColor(Colors.primary)
-            contentView.layer.borderWidth = 2
-            contentView.backgroundColor = Colors.lightness
-        }
-    }
+        contentView.layer.borderWidth = 4
+        contentView.layer.borderColor = Colors.primary.highlighted.cgColor
 
-    func applyColor(_ color: UIColor?, borderOnly: Bool = false) {
-        contentView.layer.borderColor = color?.cgColor
-        guard !borderOnly else { return }
+        guard project.isTracking else { return }
 
-        timeLabel.textColor = color
-        nameLabel.textColor = color
+        contentView.layer.borderColor = Colors.contrast.base.cgColor
+        contentView.backgroundColor = Colors.background.highlighted
+        startButton.backgroundColor = Colors.contrast.base
+        nameLabel.textColor = Colors.contrast.highlighted
+        timeLabel.textColor = Colors.contrast.subdued
     }
 }
