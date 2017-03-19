@@ -55,7 +55,7 @@ class ProjectCell: UICollectionViewCell {
 
         let size = UIFont.preferredFont(forTextStyle: .title1).pointSize
         nameFont = UIFont.systemFont(ofSize: size, weight: nameWeight)
-        priceFont = UIFont.monospacedDigitSystemFont(ofSize: size * 1.25, weight: priceWeight)
+        priceFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: priceWeight)
         timeFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: timeWeight)
 
         super.init(frame: frame)
@@ -146,7 +146,7 @@ class ProjectCell: UICollectionViewCell {
         let highlighted = highlighted ?? isHighlighted
         let selected = selected ?? isSelected
 
-        startButton.tintColor = Colors.actionable.base
+        startButton.tintColor = Colors.primary.actionable
 
         guard let project = self.project else {
             priceLabel.textColor = .clear
@@ -163,7 +163,7 @@ class ProjectCell: UICollectionViewCell {
         }
 
         guard highlighted || selected || project.isTracking else {
-            contentView.layer.borderColor = Colors.primary.dark.cgColor
+            contentView.layer.borderColor = Colors.primary.base.cgColor
             contentView.layer.borderWidth = 2
             contentView.backgroundColor = Colors.background.light
 
