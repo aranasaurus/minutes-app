@@ -19,6 +19,7 @@ class AppCoordinator {
 
     func startUp() {
         let nav = UINavigationController(rootViewController: projectsFlow.root)
+        projectsFlow.setupRootNav()
         nav.navigationBar.tintColor = Colors.primary.actionable
         nav.navigationBar.barTintColor = Colors.primary.base
         nav.navigationBar.isTranslucent = false

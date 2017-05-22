@@ -33,6 +33,37 @@ class ProjectsFlowController: NSObject {
         self.root = ProjectsViewController(dataStore: dataStore, onProjectSelected: onProjectSelected)
     }
 
+    func setupRootNav() {
+        root.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProjectTapped))
+    }
+
+    func addProjectTapped() {
+        let alert = UIAlertController(title: "New Project", message: nil, preferredStyle: .alert)
+        alert.addTextField() { textField in
+            textField.placeholder = "Name"
+            textField.autocapitalizationType = .words
+            textField.keyboardType = .alphabet
+        }
+        alert.addTextField() { textField in
+            textField.placeholder = "Default Rate"
+            textField.keyboardType = .decimalPad
+        }
+        alert.addAction(UIAlertAction(title: "Add", style: .default) { action in
+            guard action.title == "Add" else { return }
+
+            // TODO: Error handling
+            let name = alert.textFields!.first!.text!
+            let rate = Double(alert.textFields![1].text!)!
+
+            // TODO: Yikes this dataStore needs some work, this stuff shouldn't be being done here (the identifier generation and appending to the data array).
+            self.dataStore.data.append(Project(identifier: name.hash, name: name, defaultRate: rate))
+            self.dataStore.save()
+            self.root.reload()
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        root.present(alert, animated: true, completion: nil)
+    }
+
     func onProjectSelected(project: Project) {
         selectedProject = project
         let popup = UIAlertController(title: project.name, message: nil, preferredStyle: .actionSheet)

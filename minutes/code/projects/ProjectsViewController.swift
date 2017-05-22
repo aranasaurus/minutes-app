@@ -85,7 +85,11 @@ final class ProjectsViewController: UIViewController {
         collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
     }
 
-    func reload(at index: Int) {
+    func reload(at index: Int? = nil) {
+        guard let index = index else {
+            collectionView.reloadData()
+            return
+        }
         collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 }

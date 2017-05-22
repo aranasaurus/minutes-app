@@ -154,9 +154,9 @@ class ProjectCell: UICollectionViewCell {
         }
 
         switch project.cost {
-        case 0.01...DBL_MAX:
+        case Double.leastNonzeroMagnitude...Double.greatestFiniteMagnitude:
             priceLabel.textColor = Colors.negative.base
-        case -DBL_MAX ... -0.01:
+        case -Double.greatestFiniteMagnitude ... -Double.leastNonzeroMagnitude:
             priceLabel.textColor = Colors.positive.base
         default:
             priceLabel.textColor = .clear
