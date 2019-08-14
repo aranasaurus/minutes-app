@@ -1,18 +1,20 @@
 PODS:
-  - Cartography (1.1.0)
-  - Reveal-SDK (8)
-  - SwiftDate (4.1.2)
+  - Cartography (4.0.0)
+  - SwiftDate (6.0.3)
 
 DEPENDENCIES:
   - Cartography
-  - Reveal-SDK
   - SwiftDate
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Cartography
+    - SwiftDate
+
 SPEC CHECKSUMS:
-  Cartography: 0538ccb4044acbbda2266335fc58cb4228794d90
-  Reveal-SDK: 43be4e662864e937960d0d04d005135e29c4e53b
-  SwiftDate: 2dfdebd4f67ae71c9c3e2413ee3c56947f302858
+  Cartography: c5626d29056b20f1e95c017326ee4df57cc39ad8
+  SwiftDate: 8d4f14bf1ef68e95094511504856547bf9e3e1a6
 
-PODFILE CHECKSUM: 0f723944e213a079e4b13ce2f16419fcadd99bcd
+PODFILE CHECKSUM: 56852fba0b887fee64de907db190a974001b944f
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.7.5

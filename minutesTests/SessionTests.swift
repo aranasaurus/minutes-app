@@ -31,7 +31,7 @@ class SessionTests: XCTestCase {
 
         // Given a start time and no end time it should report the time that has passed since the 
         // start time
-        XCTAssertEqualWithAccuracy(Session(rate: 0, startTime: startTime).duration, Date().timeIntervalSince(startTime), accuracy: 0.001)
+        XCTAssertEqual(Session(rate: 0, startTime: startTime).duration, Date().timeIntervalSince(startTime), accuracy: 0.001)
     }
 
     func testCost() {
@@ -42,8 +42,8 @@ class SessionTests: XCTestCase {
 
         let rate = Double(42)
         // A session with a rate should multiply that rate by the number of hours of the session.
-        XCTAssertEqualWithAccuracy(Session(rate: rate, startTime: Date(timeIntervalSinceNow: -hour.converted(to: .seconds).value)).cost, rate, accuracy: 0.001)
-        XCTAssertEqualWithAccuracy(Session(rate: rate, startTime: Date(timeIntervalSinceNow: -hour.converted(to: .seconds).value/2)).cost, rate/2, accuracy: 0.001)
+        XCTAssertEqual(Session(rate: rate, startTime: Date(timeIntervalSinceNow: -hour.converted(to: .seconds).value)).cost, rate, accuracy: 0.001)
+        XCTAssertEqual(Session(rate: rate, startTime: Date(timeIntervalSinceNow: -hour.converted(to: .seconds).value/2)).cost, rate/2, accuracy: 0.001)
 
     }
 

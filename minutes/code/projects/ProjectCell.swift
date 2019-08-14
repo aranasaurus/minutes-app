@@ -54,9 +54,9 @@ class ProjectCell: UICollectionViewCell {
         startButton = UIButton(type: .system)
 
         let size = UIFont.preferredFont(forTextStyle: .title1).pointSize
-        nameFont = UIFont.systemFont(ofSize: size, weight: nameWeight)
-        priceFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: priceWeight)
-        timeFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: timeWeight)
+        nameFont = UIFont.systemFont(ofSize: size, weight: UIFont.Weight(rawValue: nameWeight))
+        priceFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: UIFont.Weight(rawValue: priceWeight))
+        timeFont = UIFont.monospacedDigitSystemFont(ofSize: size, weight: UIFont.Weight(rawValue: timeWeight))
 
         super.init(frame: frame)
 
@@ -66,7 +66,7 @@ class ProjectCell: UICollectionViewCell {
         nameLabel.font = nameFont
         nameLabel.lineBreakMode = .byWordWrapping
         nameLabel.numberOfLines = 2
-        nameLabel.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
+        nameLabel.setContentHuggingPriority(UILayoutPriority.required, for: .vertical)
         contentView.addSubview(nameLabel)
 
         priceLabel.font = priceFont
@@ -129,7 +129,7 @@ class ProjectCell: UICollectionViewCell {
                 self?.priceLabel.text = self?.delegate?.priceFormatter.string(from: NSNumber(value: -project.cost))
                 self?.updateColors()
             }
-            RunLoop.current.add(timer!, forMode: .commonModes)
+            RunLoop.current.add(timer!, forMode: RunLoop.Mode.common)
 
             startButton.setTitle("Stop", for: .normal)
         } else {

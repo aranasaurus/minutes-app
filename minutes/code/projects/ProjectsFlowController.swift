@@ -37,7 +37,7 @@ class ProjectsFlowController: NSObject {
         root.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addProjectTapped))
     }
 
-    func addProjectTapped() {
+    @objc func addProjectTapped() {
         let alert = UIAlertController(title: "New Project", message: nil, preferredStyle: .alert)
         alert.addTextField() { textField in
             textField.placeholder = "Name"
@@ -102,7 +102,7 @@ class ProjectsFlowController: NSObject {
         popup.addAction(setRate)
 
         let delete = UIAlertAction(title: "Delete", style: .destructive) { _ in
-            guard let index = self.dataStore.data.index(of: project) else { return }
+            guard let index = self.dataStore.data.firstIndex(of: project) else { return }
             self.dataStore.data.remove(at: index)
             self.root.remove(at: index)
             self.dataStore.save()
@@ -138,7 +138,7 @@ extension ProjectsFlowController: UITextFieldDelegate {
             dataStore.save()
         }
 
-        guard let index = dataStore.data.index(of: project) else { return }
+        guard let index = dataStore.data.firstIndex(of: project) else { return }
         root.reload(at: index)
     }
 }

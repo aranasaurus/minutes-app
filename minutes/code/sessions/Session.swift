@@ -52,6 +52,6 @@ extension Session {
     }
 
     static func parse(from array: [[String: Any]]) -> [Session] {
-        return array.flatMap(Session.parse(from:))
+        return array.compactMap(Session.parse(from:))
     }
 }

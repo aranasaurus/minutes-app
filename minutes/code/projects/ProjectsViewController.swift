@@ -70,7 +70,7 @@ final class ProjectsViewController: UIViewController {
 
         dataStore.load()
 
-        if let tracking = projects.index(where: { $0.isTracking }) {
+        if let tracking = projects.firstIndex(where: { $0.isTracking }) {
             let project = projects[tracking]
             trackingProject = project
         }
@@ -153,7 +153,7 @@ extension ProjectsViewController: ProjectCellDelegate {
             trackingProject = nil
             project.stop()
         } else { // Start tracking (stop previous first)
-            if let prev = self.trackingProject, let prevIndex = self.projects.index(of: prev) {
+            if let prev = self.trackingProject, let prevIndex = self.projects.firstIndex(of: prev) {
                 prev.stop()
                 indexPaths.append(IndexPath(item: prevIndex, section: 0))
             }

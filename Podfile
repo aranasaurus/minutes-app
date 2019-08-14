@@ -8,12 +8,4 @@ target 'Minutes' do
   # Pods for Minutes
   pod 'Cartography'
   pod 'SwiftDate'
-
-  pod 'Reveal-SDK', :configurations => ['Debug']
-
-  target 'minutesTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end

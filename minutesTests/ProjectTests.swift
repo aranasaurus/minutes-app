@@ -39,7 +39,7 @@ class ProjectTests: XCTestCase {
         project.start()
         XCTAssert(project.isTracking)
         sleep(1)
-        XCTAssertEqualWithAccuracy(project.totalTime, session.duration + 1, accuracy: 0.01)
+        XCTAssertEqual(project.totalTime, session.duration + 1, accuracy: 0.01)
         XCTAssertGreaterThan(project.totalTime, project.recordedTime)
 
         project.stop()
@@ -60,6 +60,6 @@ class ProjectTests: XCTestCase {
         project.start()
         sleep(1)
         // The tracking session should get its rate from the default rate and it should be included in the total cost while it's tracking.
-        XCTAssertEqualWithAccuracy(project.cost, sessions.last!.cost + project.defaultRate/3600, accuracy: 0.01)
+        XCTAssertEqual(project.cost, sessions.last!.cost + project.defaultRate/3600, accuracy: 0.01)
     }
 }
